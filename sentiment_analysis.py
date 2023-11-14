@@ -1,4 +1,3 @@
-from numpy import empty
 from transformers import pipeline, AutoTokenizer
 from fetch_github import fetch_github_issues
 
@@ -32,9 +31,9 @@ def predict_sentiment(text: list):
     sentiments = []
     positive_issues = 0
     negative_issues = 0
+
     model = "distilbert-base-uncased-finetuned-sst-2-english"
     sentiment_pipeline = pipeline("sentiment-analysis", model=model)
-    # Use a pipeline as a high-level helper
 
     tokenizer = AutoTokenizer.from_pretrained(model)
 
