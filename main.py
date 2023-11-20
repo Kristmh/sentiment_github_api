@@ -1,13 +1,13 @@
 import re
-from typing import List, Tuple
 from enum import Enum
+from typing import List, Tuple
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-from fetch_github import fetch_github_issues
-from sentiment_analysis import predict_emotions, predict_sentiment
+from sentiment_github.fetch_github import fetch_github_issues
+from sentiment_github.sentiment_analysis import predict_emotions, predict_sentiment
 
 app = FastAPI()
 
