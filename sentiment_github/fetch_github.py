@@ -6,18 +6,19 @@ import re
 load_dotenv()
 personal_access_token = os.getenv("GITHUB_TOKEN")
 
+
 # 100 issues per page so adjust max pages accordingly
-def fetch_github_issues(owner, repo, personal_access_token=personal_access_token, max_pages=1):
+def fetch_github_issues(
+    owner, repo, personal_access_token=personal_access_token, max_pages=1
+):
     base_url = f"https://api.github.com/repos/{owner}/{repo}/issues"
-    headers = {
-        "Accept": "application/vnd.github.v3+json"
-    }
+    headers = {"Accept": "application/vnd.github.v3+json"}
     if personal_access_token:
         headers["Authorization"] = f"token {personal_access_token}"
 
     params = {
         "per_page": 100,
-        "state": "all"  # Get all issues (open and closed)
+        "state": "all",  # Get all issues (open and closed)
     }
 
     issue_bodies = []
@@ -44,17 +45,18 @@ def fetch_github_issues(owner, repo, personal_access_token=personal_access_token
 
 def clean_text(text):
     # Remove URLs
-    text = re.sub(r'http\S+', '[URL]', text)
+    text = re.sub(r"http\S+", "[URL]", text)
     # Remove HTML tags
-    text = re.sub(r'<.*?>', '', text)
+    text = re.sub(r"<.*?>", "", text)
     # Remove special characters and numbers
-    text = re.sub(r'[^a-zA-Z\s]', '', text)
+    text = re.sub(r"[^a-zA-Z\s]", "", text)
     # Convert to lowercase
     text = text.lower()
     # Remove excessive whitespace
-    text = re.sub(r'\s+', ' ', text).strip()
+    text = re.sub(r"\s+", " ", text).strip()
 
     return text
+
 
 if __name__ == "__main__":
     owner = "octocat"
@@ -64,4 +66,3 @@ if __name__ == "__main__":
     print(issue_bodies)
     for body in issue_bodies:
         print(body)
-

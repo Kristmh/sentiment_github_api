@@ -1,11 +1,14 @@
-from transformers import pipeline, AutoTokenizer
-from fetch_github import fetch_github_issues
+from typing import List
+
+from transformers import AutoTokenizer, pipeline
+
+from sentiment_github.fetch_github import fetch_github_issues
 
 
 def predict_emotions(text: list):
-    emotions= []
+    emotions = []
 
-    model="SamLowe/roberta-base-go_emotions"
+    model = "SamLowe/roberta-base-go_emotions"
     pipe = pipeline("text-classification", model=model)
 
     tokenizer = AutoTokenizer.from_pretrained(model)
@@ -16,7 +19,9 @@ def predict_emotions(text: list):
     for issue in text:
         if issue:
             # Tokenize and truncate the text
-            tokens = tokenizer.encode(issue, add_special_tokens=True, truncation=True, max_length=max_length)
+            tokens = tokenizer.encode(
+                issue, add_special_tokens=True, truncation=True, max_length=max_length
+            )
 
             # Convert the tokens back to text string
             truncated_text = tokenizer.decode(tokens, skip_special_tokens=True)
@@ -24,13 +29,14 @@ def predict_emotions(text: list):
             # Pass the truncated text to the pipeline
             sentiment = pipe(truncated_text)
             print(sentiment)
-            emotions.append({"issue": issue, "sentiment":sentiment})
+            emotions.append({"issue": issue, "sentiment": sentiment})
     return emotions
 
+
 def predict_sentiment(text: list):
-    sentiments = []
-    positive_issues = 0
-    negative_issues = 0
+    sentiments: List = []
+    positive_issues: int = 0
+    negative_issues: int = 0
 
     model = "distilbert-base-uncased-finetuned-sst-2-english"
     sentiment_pipeline = pipeline("sentiment-analysis", model=model)
@@ -42,9 +48,10 @@ def predict_sentiment(text: list):
 
     for issue in text:
         if issue:
-
             # Tokenize and truncate the text
-            tokens = tokenizer.encode(issue, add_special_tokens=True, truncation=True, max_length=max_length)
+            tokens = tokenizer.encode(
+                issue, add_special_tokens=True, truncation=True, max_length=max_length
+            )
 
             # Convert the tokens back to text string
             truncated_text = tokenizer.decode(tokens, skip_special_tokens=True)
@@ -52,11 +59,11 @@ def predict_sentiment(text: list):
             # Pass the truncated text to the pipeline
             sentiment = sentiment_pipeline(truncated_text)
             print(sentiment)
-            sentiments.append({"issue": issue, "sentiment":sentiment})
+            sentiments.append({"issue": issue, "sentiment": sentiment})
             results = sentiment[0]
-            if results["label"]== "POSITIVE":
+            if results["label"] == "POSITIVE":
                 positive_issues += 1
-            elif results["label"]== "NEGATIVE":
+            elif results["label"] == "NEGATIVE":
                 negative_issues += 1
     return sentiments, positive_issues, negative_issues
 
@@ -66,7 +73,7 @@ if __name__ == "__main__":
     emotions = predict_emotions(data)
     print(emotions)
     sent, pos, neg = predict_sentiment(data)
-    #print(sent)
+    # print(sent)
     total = pos + neg
     print(f"Positive issues: {pos} out of {total}")
     print(f"Negative issues: {neg} out of {total}")
