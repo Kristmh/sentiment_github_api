@@ -1,3 +1,6 @@
 .PHONY: start
 start:
-	uvicorn main:app --reload --port 8080
+	uvicorn api.index:app --reload --port 8080
+
+test:
+	pytest && pytest --cov

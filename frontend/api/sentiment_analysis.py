@@ -2,7 +2,7 @@ from typing import List
 
 from transformers import AutoTokenizer, pipeline
 
-from sentiment_github.fetch_github import fetch_github_issues
+from api.fetch_github import fetch_github_issues
 
 
 def predict_emotions(text: list):

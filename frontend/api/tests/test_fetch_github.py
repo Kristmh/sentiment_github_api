@@ -1,7 +1,7 @@
 import pytest
 import requests
 from unittest.mock import patch, Mock
-from sentiment_github.fetch_github import fetch_github_issues, clean_text
+from api.fetch_github import fetch_github_issues, clean_text
 
 
 def test_clean_text():

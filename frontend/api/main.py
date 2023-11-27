@@ -6,8 +6,8 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-from sentiment_github.fetch_github import fetch_github_issues
-from sentiment_github.sentiment_analysis import predict_emotions, predict_sentiment
+from api.fetch_github import fetch_github_issues
+from api.sentiment_analysis import predict_emotions, predict_sentiment
 
 app = FastAPI()
 
@@ -30,7 +30,7 @@ class AnalyzeRequest(BaseModel):
     analysis_type: AnalysisType
 
 
-@app.post("/analyze")
+@app.post("api/analyze")
 async def analyze_github(request: AnalyzeRequest):
     url: str = request.url
     analysis_type: AnalysisType = request.analysis_type
