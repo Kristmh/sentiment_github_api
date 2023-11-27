@@ -30,7 +30,7 @@ class AnalyzeRequest(BaseModel):
     analysis_type: AnalysisType
 
 
-@app.post("api/analyze")
+@app.post("/api/analyze")
 async def analyze_github(request: AnalyzeRequest):
     url: str = request.url
     analysis_type: AnalysisType = request.analysis_type
@@ -62,7 +62,7 @@ async def analyze_github(request: AnalyzeRequest):
                 "results": sentiment_results[0],
             }
         elif analysis_type == AnalysisType.emotion:
-            emotion_results: List[str] = predict_emotions(issues)
+            emotion_results = predict_emotions(issues)
             return {"url": url, "analysis": analysis_type, "results": emotion_results}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Analysis Error: {str(e)}")

@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "concurrently \"npm run next-dev\" \"npm run fastapi-dev\"",
     "next-dev": "next dev",
-    "fastapi-dev": "uvicorn api.index:app --reload",
+    "fastapi-dev": "uvicorn api.main:app --reload",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
