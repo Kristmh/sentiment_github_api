@@ -2,7 +2,7 @@ from typing import List
 
 from transformers import AutoTokenizer, pipeline
 
-from api.fetch_github import fetch_github_issues
+from api.fetch_github import fetch_issues
 
 
 def predict_emotions(text: list):
@@ -69,7 +69,7 @@ def predict_sentiment(text: list):
 
 
 if __name__ == "__main__":
-    data = fetch_github_issues("microsoft", "vscode")
+    data = fetch_issues("microsoft", "vscode")
     emotions = predict_emotions(data)
     print(emotions)
     sent, pos, neg = predict_sentiment(data)
