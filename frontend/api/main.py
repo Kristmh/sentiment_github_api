@@ -1,13 +1,13 @@
 import re
 from enum import Enum
-from typing import List, Tuple
+from typing import List
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-from api.fetch_github import fetch_github_issues
-from api.sentiment_analysis import predict_emotions, predict_sentiment
+from fetch_github import fetch_issues, extract_specific_fields
+from sentiment_analysis import predict_emotions, predict_sentiment
 
 app = FastAPI()
 
@@ -45,27 +45,25 @@ async def analyze_github(request: AnalyzeRequest):
 
     # Fetch GitHub issues
     try:
-        issues: List[str] = fetch_github_issues(owner, repo)
+        issues: List[str] = fetch_issues(owner, repo)
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
     # Perform analysis
+    results = []
     try:
-        if analysis_type == AnalysisType.sentiment:
-            sentiment_results: Tuple[List[str], int, int] = predict_sentiment(issues)
-            positive, negative = sentiment_results[1], sentiment_results[2]
-            return {
-                "url": url,
-                "analysis": analysis_type,
-                "positive_issues": positive,
-                "negative_issues": negative,
-                "results": sentiment_results[0],
-            }
-        elif analysis_type == AnalysisType.emotion:
-            emotion_results = predict_emotions(issues)
-            return {"url": url, "analysis": analysis_type, "results": emotion_results}
+        for issue in issues:
+            filtered_issue = extract_specific_fields(issue)
+            results.append(filtered_issue)
+            if analysis_type == AnalysisType.emotion:
+                sentiment_results = predict_emotions(filtered_issue["text_clean"])
+            elif analysis_type == AnalysisType.sentiment:
+                sentiment_results = predict_sentiment(filtered_issue["text_clean"])
+            results.append({"results": sentiment_results})
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Analysis Error: {str(e)}")
+    return results
 
 
 if __name__ == "__main__":

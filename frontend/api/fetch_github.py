@@ -64,26 +64,21 @@ def fetch_issues(
 
 # Extract title, url, body and if it is a pull request
 # And make a new field with the cleaned text
-def extract_specific_fields(issues):
-    extracted_issues = []
-
-    for issue in issues:
-        title = issue.get("title", "")
-        body = issue.get("body", "")
-        text_clean = clean_text(f"{title} {body}")
-        # Extract only the required fields
-        filtered_issue = {
-            "url": issue.get("url"),
-            "title": issue.get("title"),
-            "body": issue.get("body"),
-            "pull_request": issue.get("pull_request", {}).get(
-                "url"
-            ),  # None if not a pull request
-            "text_clean": text_clean,
-        }
-        extracted_issues.append(filtered_issue)
-
-    return extracted_issues
+def extract_specific_fields(issue):
+    title = issue.get("title", "")
+    body = issue.get("body", "")
+    text_clean = clean_text(f"{title} {body}")
+    # Extract only the required fields
+    filtered_issue = {
+        "url": issue.get("html_url"),
+        "title": issue.get("title"),
+        "body": issue.get("body"),
+        "pull_request": issue.get("pull_request", {}).get(
+            "url"
+        ),  # None if not a pull request
+        "text_clean": text_clean,
+    }
+    return filtered_issue
 
 
 def clean_text(text):
@@ -107,5 +102,5 @@ if __name__ == "__main__":
     owner = "octocat"
     repo = "Hello-World"
     issues = fetch_issues()
-    filtered_issues = extract_specific_fields(issues)
-    print(filtered_issues[0])
+    filtered_issues = extract_specific_fields(issues[0])
+    print(filtered_issues)
