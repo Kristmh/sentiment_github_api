@@ -21,7 +21,8 @@ logging.basicConfig(
 def fetch_issues(
     owner="lazyvim",
     repo="lazyvim",
-    num_issues=100,
+    num_issues=1,
+    per_page=5,
     rate_limit=5_000,
     issues_path=Path("."),
     github_token=personal_access_token,
@@ -31,7 +32,6 @@ def fetch_issues(
 
     batch = []
     all_issues = []
-    per_page = 100  # Number of issues to return per page
     num_pages = math.ceil(num_issues / per_page)
     base_url = "https://api.github.com/repos"
     headers = {"Authorization": f"token {github_token}"}

@@ -6,8 +6,8 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-from fetch_github import fetch_issues, extract_specific_fields
-from sentiment_analysis import predict_emotions, predict_sentiment
+from api.fetch_github import fetch_issues, extract_specific_fields
+from api.sentiment_analysis import predict_emotions, predict_sentiment
 
 app = FastAPI()
 
@@ -28,11 +28,15 @@ class AnalysisType(str, Enum):
 class AnalyzeRequest(BaseModel):
     url: str
     analysis_type: AnalysisType
+    num_issues: int
+    per_page: int
 
 
 @app.post("/api/analyze")
 async def analyze_github(request: AnalyzeRequest):
     url: str = request.url
+    num_issues: int = int(request.num_issues)
+    per_page: int = int(request.per_page)
     analysis_type: AnalysisType = request.analysis_type
 
     # Get github owner and repo
@@ -45,7 +49,7 @@ async def analyze_github(request: AnalyzeRequest):
 
     # Fetch GitHub issues
     try:
-        issues: List[str] = fetch_issues(owner, repo)
+        issues: List[str] = fetch_issues(owner, repo, num_issues, per_page)
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -55,15 +59,16 @@ async def analyze_github(request: AnalyzeRequest):
     try:
         for issue in issues:
             filtered_issue = extract_specific_fields(issue)
-            results.append(filtered_issue)
+            # TODO: this might change when refactoring other functions.
             if analysis_type == AnalysisType.emotion:
                 sentiment_results = predict_emotions(filtered_issue["text_clean"])
             elif analysis_type == AnalysisType.sentiment:
                 sentiment_results = predict_sentiment(filtered_issue["text_clean"])
-            results.append({"results": sentiment_results})
+            filtered_issue["results"] = sentiment_results
+            results.append(filtered_issue)
+        return results
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Analysis Error: {str(e)}")
-    return results
 
 
 if __name__ == "__main__":

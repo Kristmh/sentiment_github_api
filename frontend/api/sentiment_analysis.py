@@ -1,16 +1,15 @@
-from typing import List
-
-import json
 import logging
+
 from transformers import AutoTokenizer, pipeline
 
-from fetch_github import fetch_issues, extract_specific_fields
+from api.fetch_github import extract_specific_fields, fetch_issues
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
 
+# TODO: refactor into one function
 def predict_emotions(text):
     model = "SamLowe/roberta-base-go_emotions"
     pipe = pipeline("text-classification", model=model)
@@ -33,9 +32,10 @@ def predict_emotions(text):
 
     # Pass the truncated text to the pipeline
     sentiment = pipe(truncated_text)
-    logging.info(sentiment)
-    sentiment = {"label": sentiment[0]["label"], "score": sentiment[0]["score"]}
+    sentiment["label"] = sentiment[0]["label"]
+    sentiment["score"] = sentiment[0]["score"]
 
+    logging.info(sentiment)
     return sentiment
 
 
