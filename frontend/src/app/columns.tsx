@@ -8,12 +8,19 @@ export type Issues = {
   url: string
   title: string
   body: string
+  score: string
+  label: string
+  pull_request: string
 }
 
 export const columns: ColumnDef<Issues>[] = [
   {
-    accessorKey: "url",
-    header: "Url",
+    accessorKey: "score",
+    header: "Score",
+  },
+  {
+    accessorKey: "label",
+    header: "Label",
   },
   {
     accessorKey: "title",
@@ -22,5 +29,13 @@ export const columns: ColumnDef<Issues>[] = [
   {
     accessorKey: "body",
     header: "Body",
+  },
+  {
+    accessorKey: "pull_request",
+    header: "Pull Request",
+  },
+  {
+    accessorKey: "url",
+    header: "Url",
   },
 ]

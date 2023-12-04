@@ -32,9 +32,8 @@ def predict_emotions(text):
 
     # Pass the truncated text to the pipeline
     sentiment = pipe(truncated_text)
-    sentiment["label"] = sentiment[0]["label"]
-    sentiment["score"] = sentiment[0]["score"]
 
+    sentiment = {"label": sentiment[0]["label"], "score": sentiment[0]["score"]}
     logging.info(sentiment)
     return sentiment
 

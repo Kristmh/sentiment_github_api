@@ -1,5 +1,6 @@
 import { Issues, columns } from "./columns"
 import { DataTable } from "./data_table"
+import { ModeToggle } from "./mode_toggle"
 
 type postPops = {
   url: string;
@@ -14,7 +15,8 @@ const data_mock: postPops = {
   num_issues: 2,
   per_page: 2,
 };
-async function postData(data: postPops) {
+
+async function postData(data: postPops): Promise<Issues[]> {
   const res = await fetch("http://127.0.0.1:8000/api/analyze", {
     method: "POST",
     headers: {
@@ -25,28 +27,21 @@ async function postData(data: postPops) {
   });
 
   if (!res.ok) {
-    throw new Error("Failed to post data");
+    const errorText = await res.text();
+    throw new Error(`Failed to post data: ${res.status} ${errorText}`);
   }
 
   return res.json();
 }
+
 export default async function Home() {
   const data = await postData(data_mock);
-  const res = data[0].score;
-  console.log(data[0].ulr);
+  console.log(data[0].url);
   return (
-    <div>
+    <div className="container mx-auto py-10">
+      <ModeToggle />
+
       <DataTable columns={columns} data={data} />
-      <h1>hello world</h1>
-      <h2>{res}</h2>
-      <h2>{data[0].url}</h2>
-      <h2>{data[0].title}</h2>
-      <h2>{data[0].body}</h2>
-      <h2>{data[0].results.score}</h2>
-      <h2>{data[0].results.label}</h2>
-
-
-
     </div>
   );
 }
