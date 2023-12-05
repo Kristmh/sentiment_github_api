@@ -36,15 +36,11 @@ export const columns: ColumnDef<Issues>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Score
+          Accuracy
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
-  },
-  {
-    accessorKey: "body",
-    header: "Body",
   },
   {
     accessorKey: "url",

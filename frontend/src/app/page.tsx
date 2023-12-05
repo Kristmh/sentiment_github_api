@@ -12,8 +12,8 @@ type postPops = {
 const data_mock: postPops = {
   url: "https://github.com/vercel/next.js",
   analysis_type: "emotion",
-  num_issues: 5,
-  per_page: 5,
+  num_issues: 100,
+  per_page: 100,
 };
 
 async function postData(data: postPops): Promise<Issues[]> {
