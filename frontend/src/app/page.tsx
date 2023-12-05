@@ -1,6 +1,6 @@
-import { Issues, columns } from "./columns"
-import { DataTable } from "./data_table"
-import { ModeToggle } from "./mode_toggle"
+import { Issues, columns } from "./columns";
+import { DataTable } from "./data_table";
+import { ModeToggle } from "./mode_toggle";
 
 type postPops = {
   url: string;
@@ -12,8 +12,8 @@ type postPops = {
 const data_mock: postPops = {
   url: "https://github.com/vercel/next.js",
   analysis_type: "emotion",
-  num_issues: 2,
-  per_page: 2,
+  num_issues: 5,
+  per_page: 5,
 };
 
 async function postData(data: postPops): Promise<Issues[]> {
@@ -23,7 +23,6 @@ async function postData(data: postPops): Promise<Issues[]> {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(data),
-    cache: "no-cache",
   });
 
   if (!res.ok) {
