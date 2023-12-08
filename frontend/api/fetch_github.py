@@ -18,7 +18,7 @@ logging.basicConfig(
 )
 
 
-def fetch_issues(
+def fetch_github_issues(
     owner="lazyvim",
     repo="lazyvim",
     num_issues=1,
@@ -101,6 +101,6 @@ def clean_text(text):
 if __name__ == "__main__":
     owner = "octocat"
     repo = "Hello-World"
-    issues = fetch_issues()
+    issues = fetch_github_issues()
     filtered_issues = extract_specific_fields(issues[0])
     print(filtered_issues)

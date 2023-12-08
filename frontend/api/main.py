@@ -1,12 +1,13 @@
 import re
 from enum import Enum
+from transformers import pipeline
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-from api.fetch_github import fetch_issues, extract_specific_fields
-from api.sentiment_analysis import predict_emotions, predict_sentiment
+from api.fetch_github import fetch_github_issues, extract_specific_fields
+from api.sentiment_analysis import predict_sentiment
 
 app = FastAPI()
 
@@ -48,7 +49,7 @@ async def analyze_github(request: AnalyzeRequest):
 
     # Fetch GitHub issues
     try:
-        issues = fetch_issues(owner, repo, num_issues, per_page)
+        issues = fetch_github_issues(owner, repo, num_issues, per_page)
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -58,11 +59,18 @@ async def analyze_github(request: AnalyzeRequest):
     try:
         for issue in issues:
             filtered_issue = extract_specific_fields(issue)
-            # TODO: this might change when refactoring other functions.
             if analysis_type == AnalysisType.emotion:
-                sentiment_results = predict_emotions(filtered_issue["text_clean"])
+                model = "SamLowe/roberta-base-go_emotions"
+                pipe = pipeline("text-classification", model=model)
+                sentiment_results = predict_sentiment(
+                    filtered_issue["text_clean"], pipe, model
+                )
             elif analysis_type == AnalysisType.sentiment:
-                sentiment_results = predict_sentiment(filtered_issue["text_clean"])
+                model = "distilbert-base-uncased-finetuned-sst-2-english"
+                pipe = pipeline("sentiment-analysis", model=model)
+                sentiment_results = predict_sentiment(
+                    filtered_issue["text_clean"], pipe, model
+                )
             filtered_issue["score"] = sentiment_results["score"]
             filtered_issue["label"] = sentiment_results["label"]
             results.append(filtered_issue)
