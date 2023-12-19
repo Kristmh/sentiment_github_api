@@ -21,8 +21,8 @@ logging.basicConfig(
 def fetch_github_issues(
     owner="lazyvim",
     repo="lazyvim",
-    num_issues=1,
-    per_page=5,
+    num_issues=2,
+    per_page=2,
     rate_limit=5_000,
     issues_path=Path("."),
     github_token=personal_access_token,
