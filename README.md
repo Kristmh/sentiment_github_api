@@ -4,7 +4,7 @@
 
 Find sentiment of GitHub issues using machine learning.
 Can choose between using 2 models.
-One find if issues are positive or negative. Model: [A version of Distilbert](https://huggingface.co/distilbert-base-uncased-finetuned-sst-2-english).
+One finds if issues are positive or negative. Model: [A version of Distilbert](https://huggingface.co/distilbert-base-uncased-finetuned-sst-2-english).
 The seconds finds emotions in issues like confusion, joy, nervousness, surprise. Model [Based on roberta model](https://huggingface.co/SamLowe/roberta-base-go_emotions).
 
 ## Why?
@@ -39,13 +39,13 @@ This will run both Next.js and fastapi servers.
 yarn dev
 ```
 
-Run only next.js
+If you only want to run next.js server:
 
 ```bash
 yarn next-dev
 ```
 
-Run only fastapi
+If you only want to run fastapi server:
 
 ```bash
 yarn fastapi-dev
@@ -55,6 +55,6 @@ yarn fastapi-dev
 
 Navigate to the website running on [http://localhost:3000](http://localhost:3000)
 Enter a GitHub repository, select a model and click submit.
-Include the full URL like this: https://github.com/neovim/neovimm
+Include the full URL like this: https://github.com/neovim/neovim
 
 Backend Running on [http://localhost:8000](http://localhost:8000)
